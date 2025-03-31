@@ -22,17 +22,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println(oAuth2User.getAttributes());
-        Map<String, Object> attributeMap = oAuth2User.getAttribute("kakao_account.profile");
-        System.out.println(attributeMap);
-//        String nickName = (String) attributeMap.get("nickname");
+        Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        String nickName = (String) profile.get("nickname");
 
-//        Member member = memberRepository.findByNickName(nickName)
-//                .orElseGet(
-//                        () -> registerMember(attributeMap)
-//                );
+        Member member = memberRepository.findByNickName(nickName)
+                .orElseGet(
+                        () -> registerMember(profile)
+                );
 
-        return new CustomOAuth2User(null, oAuth2User.getAttributes());
+        return new CustomOAuth2User(member, oAuth2User.getAttributes());
     }
 
     private Member registerMember(Map<String, Object> attributeMap) {
