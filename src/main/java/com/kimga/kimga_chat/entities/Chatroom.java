@@ -1,15 +1,13 @@
 package com.kimga.kimga_chat.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,4 +26,19 @@ public class Chatroom {
     private Set<MemberChatroomMapping> memberChatroomMappings = new HashSet<>();
 
     private LocalDateTime createdAt;
+
+    public MemberChatroomMapping addMember(Member member) {
+        if (this.getMemberChatroomMappings() == null) {
+            this.memberChatroomMappings = new HashSet<>();
+        }
+
+        MemberChatroomMapping memberChatroomMapping = MemberChatroomMapping.builder()
+                .member(member)
+                .chatroom(this)
+                .build();
+
+        this.memberChatroomMappings.add(memberChatroomMapping);
+
+        return memberChatroomMapping;
+    }
 }

@@ -1,5 +1,6 @@
 package com.kimga.kimga_chat.controllers;
 
+import com.kimga.kimga_chat.dtos.ChatroomDto;
 import com.kimga.kimga_chat.entities.Chatroom;
 import com.kimga.kimga_chat.services.ChatService;
 import com.kimga.kimga_chat.services.CustomOAuth2User;
@@ -19,11 +20,12 @@ public class ChatController {
     public final ChatService chatService;
 
     @PostMapping
-    public Chatroom createChatroom(
+    public ChatroomDto createChatroom(
             @AuthenticationPrincipal CustomOAuth2User user,
             @RequestParam String title
     ) {
-        return chatService.createChatroom(user.getMember(), title);
+        Chatroom chatroom = chatService.createChatroom(user.getMember(), title);
+        return ChatroomDto.from(chatroom);
     }
 
     @PostMapping("/{chatroomId}")
@@ -43,9 +45,12 @@ public class ChatController {
     }
 
     @GetMapping
-    public List<Chatroom> getChatrooms(
+    public List<ChatroomDto> getChatrooms(
             @AuthenticationPrincipal CustomOAuth2User user
     ) {
-        return chatService.getChatroomList(user.getMember());
+        List<Chatroom> chatrooms = chatService.getChatroomList(user.getMember());
+        return chatrooms.stream()
+                .map(ChatroomDto::from)
+                .toList();
     }
 }

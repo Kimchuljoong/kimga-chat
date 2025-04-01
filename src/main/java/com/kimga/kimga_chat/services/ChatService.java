@@ -8,6 +8,7 @@ import com.kimga.kimga_chat.repositories.MemberChatMappingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ public class ChatService {
     private final ChatroomRepository chatroomRepository;
     private final MemberChatMappingRepository memberChatMappingRepository;
 
+    @Transactional
     public Chatroom createChatroom(Member member, String title) {
         Chatroom newChatroom = Chatroom.builder()
                 .title(title)
@@ -28,10 +30,7 @@ public class ChatService {
 
         Chatroom savedChatroom = chatroomRepository.save(newChatroom);
 
-        MemberChatroomMapping newMemberChatroomMapping = MemberChatroomMapping.builder()
-                .member(member)
-                .chatroom(savedChatroom)
-                .build();
+        MemberChatroomMapping newMemberChatroomMapping = savedChatroom.addMember(member);
 
         memberChatMappingRepository.save(newMemberChatroomMapping);
 
@@ -56,6 +55,7 @@ public class ChatService {
         return true;
     }
 
+    @Transactional
     public Boolean leaveChatroom(Member member, Long chatroomId) {
         if (!memberChatMappingRepository.existsByMemberIdAndChatroomId(member.getId(), chatroomId)) {
             log.info("참여하지 않은 방입니다.");
