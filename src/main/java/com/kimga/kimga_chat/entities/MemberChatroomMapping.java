@@ -1,7 +1,12 @@
 package com.kimga.kimga_chat.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 public class MemberChatroomMapping {
 
