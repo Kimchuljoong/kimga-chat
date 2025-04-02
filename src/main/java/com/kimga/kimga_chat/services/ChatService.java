@@ -3,8 +3,10 @@ package com.kimga.kimga_chat.services;
 import com.kimga.kimga_chat.entities.Chatroom;
 import com.kimga.kimga_chat.entities.Member;
 import com.kimga.kimga_chat.entities.MemberChatroomMapping;
+import com.kimga.kimga_chat.entities.Message;
 import com.kimga.kimga_chat.repositories.ChatroomRepository;
 import com.kimga.kimga_chat.repositories.MemberChatMappingRepository;
+import com.kimga.kimga_chat.repositories.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class ChatService {
 
     private final ChatroomRepository chatroomRepository;
     private final MemberChatMappingRepository memberChatMappingRepository;
+    private final MessageRepository messageRepository;
 
     @Transactional
     public Chatroom createChatroom(Member member, String title) {
@@ -73,6 +76,21 @@ public class ChatService {
         return memberChatroomMappingList.stream()
                 .map(MemberChatroomMapping::getChatroom)
                 .toList();
+    }
 
+    public Message saveMessage(Member member, Long chatroomId, String text) {
+        Chatroom chatroom = chatroomRepository.findById(chatroomId).get();
+
+        Message message = Message.builder()
+                .text(text)
+                .member(member)
+                .chatroom(chatroom)
+                .build();
+
+        return messageRepository.save(message);
+    }
+
+    public List<Message> getMessageList(Long chatroomId) {
+        return messageRepository.findAllByChatroomId(chatroomId);
     }
 }

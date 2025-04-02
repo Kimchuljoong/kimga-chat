@@ -1,7 +1,9 @@
 package com.kimga.kimga_chat.controllers;
 
+import com.kimga.kimga_chat.dtos.ChatMessage;
 import com.kimga.kimga_chat.dtos.ChatroomDto;
 import com.kimga.kimga_chat.entities.Chatroom;
+import com.kimga.kimga_chat.entities.Message;
 import com.kimga.kimga_chat.services.ChatService;
 import com.kimga.kimga_chat.services.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,7 @@ public class ChatController {
         return chatService.joinChatroom(user.getMember(), chatroomId);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{chatroomId}")
     public Boolean leaveChatroom(
             @AuthenticationPrincipal CustomOAuth2User user,
             @PathVariable Long chatroomId
@@ -53,4 +55,14 @@ public class ChatController {
                 .map(ChatroomDto::from)
                 .toList();
     }
+
+    @GetMapping("/{chatroomId}/messages")
+    public List<ChatMessage> getMessageList(@PathVariable Long chatroomId) {
+        List<Message> messageList = chatService.getMessageList(chatroomId);
+
+        return messageList.stream()
+                .map(message -> new ChatMessage(message.getMember().getNickName(), message.getText()))
+                .toList();
+    }
+
 }
