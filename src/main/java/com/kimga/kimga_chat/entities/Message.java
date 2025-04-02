@@ -3,6 +3,8 @@ package com.kimga.kimga_chat.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -25,4 +27,6 @@ public class Message {
     @JoinColumn(name = "chatroom_id")
     @ManyToOne
     Chatroom chatroom;
+
+    LocalDateTime createdAt;
 }

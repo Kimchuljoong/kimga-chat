@@ -3,6 +3,8 @@ package com.kimga.kimga_chat.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -21,4 +23,6 @@ public class MemberChatroomMapping {
 
     @ManyToOne
     private Chatroom chatroom;
+
+    LocalDateTime lastCheckedAt;
 }

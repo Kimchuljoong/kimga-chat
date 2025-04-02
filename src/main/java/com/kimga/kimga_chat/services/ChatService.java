@@ -74,7 +74,12 @@ public class ChatService {
         List<MemberChatroomMapping> memberChatroomMappingList = memberChatMappingRepository.findAllByMemberId(member.getId());
 
         return memberChatroomMappingList.stream()
-                .map(MemberChatroomMapping::getChatroom)
+                .map(memberChatroomMapping -> {
+                    Chatroom chatroom = memberChatroomMapping.getChatroom();
+                    chatroom.setHasNewMessage(messageRepository.existsByChatroomIdAndCreatedAtAfter(chatroom.getId(), memberChatroomMapping.getLastCheckedAt()));
+
+                    return chatroom;
+                })
                 .toList();
     }
 
@@ -85,6 +90,7 @@ public class ChatService {
                 .text(text)
                 .member(member)
                 .chatroom(chatroom)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return messageRepository.save(message);

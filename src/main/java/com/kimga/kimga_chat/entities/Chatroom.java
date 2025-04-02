@@ -27,6 +27,13 @@ public class Chatroom {
 
     private LocalDateTime createdAt;
 
+    @Transient
+    Boolean hasNewMessage;
+
+    public void setHasNewMessage(Boolean hasNewMessage) {
+        this.hasNewMessage = hasNewMessage;
+    }
+
     public MemberChatroomMapping addMember(Member member) {
         if (this.getMemberChatroomMappings() == null) {
             this.memberChatroomMappings = new HashSet<>();
