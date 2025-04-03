@@ -18,4 +18,6 @@ public class Member {
 
     private String nickName;
     private String role;
+
+    private String password;
 }
