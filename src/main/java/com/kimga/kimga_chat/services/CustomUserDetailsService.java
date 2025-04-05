@@ -1,6 +1,7 @@
 package com.kimga.kimga_chat.services;
 
 import com.kimga.kimga_chat.dtos.CustomUserDetails;
+import com.kimga.kimga_chat.dtos.MemberDto;
 import com.kimga.kimga_chat.entities.Member;
 import com.kimga.kimga_chat.repositories.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
     @Override
@@ -28,5 +31,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         return new CustomUserDetails(member);
+    }
+
+    public MemberDto saveMember(MemberDto memberDto) {
+        Member member = MemberDto.to(memberDto);
+        member.updatePassword(memberDto.password(), memberDto.confirmPassword(), passwordEncoder);
+
+
+
+        return MemberDto.from(memberRepository.save(member));
     }
 }

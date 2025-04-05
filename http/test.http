@@ -1,0 +1,14 @@
+
+### GET request to example server
+POST https://localhost:8080/consultants
+Content-Type: application/json
+
+{
+  "nickName": "consultant",
+  "password": "password",
+  "confirmPassword": "password",
+  "role": "ROLE_CONSULTANT"
+
+}
+
+###
