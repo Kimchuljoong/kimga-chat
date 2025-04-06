@@ -8,6 +8,8 @@ import com.kimga.kimga_chat.repositories.ChatroomRepository;
 import com.kimga.kimga_chat.repositories.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,5 +50,11 @@ public class ConsultantService implements UserDetailsService {
     public List<ChatroomDto> getAllChatrooms() {
         List<Chatroom> chatroomList = chatroomRepository.findAll();
         return chatroomList.stream().map(ChatroomDto::from).toList();
+    }
+
+    public Page<ChatroomDto> getChatroomPage(Pageable pageable) {
+        Page<Chatroom> chatroomPage = chatroomRepository.findAll(pageable);
+        return chatroomPage.map(ChatroomDto::from);
+
     }
 }

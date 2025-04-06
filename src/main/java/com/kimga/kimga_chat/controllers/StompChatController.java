@@ -1,6 +1,7 @@
 package com.kimga.kimga_chat.controllers;
 
 import com.kimga.kimga_chat.dtos.ChatMessage;
+import com.kimga.kimga_chat.dtos.ChatroomDto;
 import com.kimga.kimga_chat.services.ChatService;
 import com.kimga.kimga_chat.services.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class StompChatController {
         CustomOAuth2User user = (CustomOAuth2User) ((AbstractAuthenticationToken) principal).getPrincipal();
 
         chatService.saveMessage(user.getMember(), chatroomId, payload.get("message"));
-        messagingTemplate.convertAndSend("/sub/chats/news", chatroomId);
+        messagingTemplate.convertAndSend("/sub/chats/updates", chatService.getChatroom(chatroomId));
         return new ChatMessage(principal.getName(), payload.get("message"));
     }
 }

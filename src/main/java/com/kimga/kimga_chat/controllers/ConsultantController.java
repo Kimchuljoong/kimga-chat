@@ -5,6 +5,8 @@ import com.kimga.kimga_chat.dtos.MemberDto;
 import com.kimga.kimga_chat.services.ConsultantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +33,8 @@ public class ConsultantController {
 
     @ResponseBody
     @GetMapping("chats")
-    public List<ChatroomDto> getAllChatrooms() {
-        return consultantService.getAllChatrooms();
+    public Page<ChatroomDto> getAllChatrooms(Pageable pageable) {
+        return consultantService.getChatroomPage(pageable);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.kimga.kimga_chat.services;
 
+import com.kimga.kimga_chat.dtos.ChatroomDto;
 import com.kimga.kimga_chat.entities.Chatroom;
 import com.kimga.kimga_chat.entities.Member;
 import com.kimga.kimga_chat.entities.MemberChatroomMapping;
@@ -111,5 +112,11 @@ public class ChatService {
 
     public List<Message> getMessageList(Long chatroomId) {
         return messageRepository.findAllByChatroomId(chatroomId);
+    }
+
+    @Transactional(readOnly = true)
+    public ChatroomDto getChatroom(Long chatroomId) {
+        Chatroom chatroom = chatroomRepository.findById(chatroomId).get();
+        return ChatroomDto.from(chatroom);
     }
 }
