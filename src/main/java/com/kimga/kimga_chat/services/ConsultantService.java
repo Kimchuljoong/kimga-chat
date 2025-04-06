@@ -1,8 +1,10 @@
 package com.kimga.kimga_chat.services;
 
-import com.kimga.kimga_chat.dtos.CustomUserDetails;
+import com.kimga.kimga_chat.dtos.ChatroomDto;
 import com.kimga.kimga_chat.dtos.MemberDto;
+import com.kimga.kimga_chat.entities.Chatroom;
 import com.kimga.kimga_chat.entities.Member;
+import com.kimga.kimga_chat.repositories.ChatroomRepository;
 import com.kimga.kimga_chat.repositories.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +15,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class ConsultantService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final ChatroomRepository chatroomRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -30,15 +35,18 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new AccessDeniedException("상담사가 아닙니다");
         }
 
-        return new CustomUserDetails(member);
+        return new CustomUserDetails(member, null);
     }
 
     public MemberDto saveMember(MemberDto memberDto) {
         Member member = MemberDto.to(memberDto);
         member.updatePassword(memberDto.password(), memberDto.confirmPassword(), passwordEncoder);
 
-
-
         return MemberDto.from(memberRepository.save(member));
+    }
+
+    public List<ChatroomDto> getAllChatrooms() {
+        List<Chatroom> chatroomList = chatroomRepository.findAll();
+        return chatroomList.stream().map(ChatroomDto::from).toList();
     }
 }

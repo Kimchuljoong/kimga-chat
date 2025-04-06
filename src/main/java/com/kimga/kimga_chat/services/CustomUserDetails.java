@@ -1,7 +1,6 @@
-package com.kimga.kimga_chat.dtos;
+package com.kimga.kimga_chat.services;
 
 import com.kimga.kimga_chat.entities.Member;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,14 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-@AllArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails extends CustomOAuth2User implements UserDetails {
 
-    private Member member;
-
-    public Member getMember() {
-        return this.member;
+    public CustomUserDetails(Member member, Map<String, Object> attributesMap) {
+        super(member, attributesMap);
     }
 
     @Override

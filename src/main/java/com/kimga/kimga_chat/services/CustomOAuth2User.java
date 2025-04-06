@@ -13,8 +13,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
 
-    private Member member;
-    private Map<String, Object> attributesMap;
+    Member member;
+    Map<String, Object> attributesMap;
 
     public Member getMember() {
         return this.member;

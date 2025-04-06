@@ -39,7 +39,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         System.out.println();
         Member newMember = Member.builder()
                 .nickName((String) attributeMap.get("nickname"))
-                .role("USER_ROLE")
+                .role("ROLE_USER")
                 .build();
 
         return memberRepository.save(newMember);
